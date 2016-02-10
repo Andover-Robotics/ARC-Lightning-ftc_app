@@ -90,5 +90,9 @@ public class FtcOpModeRegister implements OpModeRegister {
         //manager.register("PushBotDriveTouch", PushBotDriveTouch.java);
         //manager.register("PushBotIrSeek", PushBotIrSeek.java);
         //manager.register("PushBotSquare", PushBotSquare.java);**/
+        manager.register("Slide Tester", SlideTest.class);
+        manager.register("TeleOp", Teleop2.class);
+        manager.register("Straight Autonomous", AutoBasic.class);
+        manager.register("Flexible Autonomous Alpha", FlexibleAutonomous.class);
     }
 }
