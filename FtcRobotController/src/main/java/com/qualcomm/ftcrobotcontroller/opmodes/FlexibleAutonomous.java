@@ -28,16 +28,16 @@ public class FlexibleAutonomous extends AutonomousOpMode{
         }
     }*/
     private int[] varList = new int[NUM_VARS];
-    private String[] varNames =
-            {"Alliance: ", "Ramp: ", "Hangers: ", "Priority: "};
-    private String[][] varVals = {
-            {"Red", "Blue"},
-            {"Red", "Blue", "No"},
-            {"Yes", "No"},
-            {"High", "Low"}
-    };
     private void assignVars(){
         int i = 0;
+        String[] varNames =
+                {"Alliance: ", "Ramp: ", "Hangers: ", "Priority: "};
+        String[][] varVals = {
+                {"Red", "Blue"},
+                {"Red", "Blue", "No"},
+                {"Yes", "No"},
+                {"High", "Low"}
+        };
         while(i < NUM_VARS){                                        //While the counting integer is less than the total number of autonomous variables
             if(i < 0)                                               //if i gets below 0, reset to 0 to avoid an ArrayOutOfBoundsException
                 i = 0;
