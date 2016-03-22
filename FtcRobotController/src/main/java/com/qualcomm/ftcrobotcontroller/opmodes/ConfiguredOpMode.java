@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 public abstract class ConfiguredOpMode extends LinearOpMode {
     protected DcMotor dLeft, dRight, dL2, dR2, sLeft, sRight, sweep;                //The 'd' prefix indicates a drivetrain component, the 's' prefix indicates a slide component
-    protected Servo bRack, bTilt, hLeft, hRight;                          /*The 'b' prefix indicates a bucket component, the 'h' prefix indicates a hanger-manipulator
+    protected Servo hook, door, hLeft, hRight;                          /*The 'b' prefix indicates a bucket component, the 'h' prefix indicates a hanger-manipulator
                                                                           bRack = Rack and Pinion, bTilt = Servo for tilting bucket*/
     protected DcMotor[] linSlide;
     //protected GyroSensor gyro;
@@ -38,11 +38,12 @@ public abstract class ConfiguredOpMode extends LinearOpMode {
         dL2 = hardwareMap.dcMotor.get("FL");
         dR2 = hardwareMap.dcMotor.get("FR");
         reverseMotor(sLeft);
-        reverseMotor(dRight);
+        reverseMotor(dLeft);
+        reverseMotor(dL2);
         sRight = hardwareMap.dcMotor.get("SR");
         sweep = hardwareMap.dcMotor.get("S");
-        bRack = hardwareMap.servo.get("R");
-        bTilt = hardwareMap.servo.get("T");
+        hook = hardwareMap.servo.get("R");
+        door = hardwareMap.servo.get("T");
         hLeft = hardwareMap.servo.get("HL");
         hRight = hardwareMap.servo.get("HR");
         linSlide = new DcMotor[2];
@@ -50,8 +51,8 @@ public abstract class ConfiguredOpMode extends LinearOpMode {
         linSlide[1] = sRight;
         //gyro = hardwareMap.gyroSensor.get("gyro");
         //gyro.calibrate();
-        bRack.setPosition(0.5);
-        bTilt.setPosition(0.5);
+        hook.setPosition(0.5);
+        door.setPosition(0.5);
 
     }
 }

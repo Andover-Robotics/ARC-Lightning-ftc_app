@@ -6,6 +6,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 public class AutoBasic extends AutonomousOpMode{
     public void runOpMode() throws InterruptedException{
         super.runOpMode();
-
+        encDrive(60);
+        encTurn(-90);
     }
 }

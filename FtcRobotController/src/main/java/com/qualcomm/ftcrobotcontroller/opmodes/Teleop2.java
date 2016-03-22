@@ -5,6 +5,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  */
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -22,11 +23,16 @@ public class Teleop2 extends ConfiguredOpMode {
     public final float JOY_PWR_MULT = (float) 0.8;
     public void runOpMode() throws InterruptedException{
         super.runOpMode();
+        dL2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        dR2.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        sLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         waitForStart();
         while(opModeIsActive()){
             powerMotor(dLeft, gamepad1.left_stick_y);
             powerMotor(dRight, gamepad1.right_stick_y);
             powerMotor(linSlide, gamepad2.right_stick_y);
+            powerMotor(dL2, gamepad1.left_stick_y);
+            powerMotor(dR2, gamepad1.right_stick_y);
             if(gamepad1.left_trigger > 0.1)
                 powerMotor(sweep, gamepad1.left_trigger);
             else if(gamepad1.right_trigger > 0.1)
@@ -36,18 +42,18 @@ public class Teleop2 extends ConfiguredOpMode {
             }
             /**incrementServo(bRack, 0.01, gamepad2.dpad_left, gamepad2.dpad_right);
             incrementServo(bTilt, 0.01, gamepad2.left_bumper, gamepad2.right_bumper);*/
-            hardSetServo(bRack, 0, gamepad2.dpad_left);
-            hardSetServo(bRack, 1, gamepad2.dpad_right);
+            hardSetServo(door, 0.1, gamepad2.dpad_left);//left flipper
+            hardSetServo(door, 0.5, gamepad2.dpad_right);
             //hardSetServo(bRack, 0.5, gamepad2.a);
-            hardSetServo(bTilt, 0.2, gamepad2.right_bumper);
-            hardSetServo(bTilt, 0.8, gamepad2.left_bumper);
+            hardSetServo(hook, 0.5, gamepad2.right_bumper);//door
+            hardSetServo(hook, 1, gamepad2.left_bumper);
             //hardSetServo(bTilt, 0.5, gamepad2.b);
-            hardSetServo(bTilt, 0.5, gamepad2.dpad_up);
-            hardSetServo(bRack, 0.5, gamepad2.dpad_down);
-            hardSetServo(hLeft, 0.5, gamepad1.dpad_left);
-            hardSetServo(hLeft, 1, gamepad1.dpad_right);
-            hardSetServo(hRight, 0, gamepad1.dpad_up);
-            hardSetServo(hRight, 0.5, gamepad1.dpad_down);
+            //hardSetServo(bTilt, 0.5, gamepad2.dpad_up);
+            //hardSetServo(bRack, 0.5, gamepad2.dpad_down);
+            hardSetServo(hLeft, 0.5, gamepad2.dpad_up);//right flipper
+            hardSetServo(hLeft, 0.9, gamepad2.dpad_down);
+            hardSetServo(hRight, 0, gamepad1.right_bumper);//hook up
+            hardSetServo(hRight, 1, gamepad1.left_bumper);
         }
         stopRobot();
     }
@@ -77,5 +83,24 @@ public class Teleop2 extends ConfiguredOpMode {
     public void hardSetServo(Servo s, double pos, boolean buttonPress) {
         if (buttonPress)
             s.setPosition(pos);
+    }
+    public void powerSlides(float joyStick){
+        float throttle = 0;
+        double currentPos = 0;
+        if(currentPos < 0){
+            sLeft.getController().setMotorControllerDeviceMode(DcMotorController.DeviceMode.WRITE_ONLY);
+            throttle = Range.clip(JOY_PWR_MULT * joyStick, 0, 1);     //Range.clip ensures that the throttles remain within a reasonable range
+            sLeft.getController().setMotorControllerDeviceMode(DcMotorController.DeviceMode.READ_ONLY);
+            currentPos = sLeft.getCurrentPosition();
+        }
+        else{
+            sLeft.getController().setMotorControllerDeviceMode(DcMotorController.DeviceMode.WRITE_ONLY);
+            throttle = Range.clip(JOY_PWR_MULT * joyStick, -1, 1);     //Range.clip ensures that the throttles remain within a reasonable range
+            sLeft.getController().setMotorControllerDeviceMode(DcMotorController.DeviceMode.READ_ONLY);
+            currentPos = sLeft.getCurrentPosition();
+        }
+        for(DcMotor motor : linSlide){
+            motor.setPower(throttle);
+        }
     }
 }
